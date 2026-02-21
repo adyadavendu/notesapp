@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchCurrentUser = async () => {
     try {
-      const response = await api.get('/auth/me')
+      const response = await api.get('/api/auth/me')
       setUser(response.data.user)
     } catch {
       setUser(null)
@@ -23,24 +23,24 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   const signup = async (payload) => {
-    const response = await api.post('/auth/signup', payload)
+    const response = await api.post('/api/auth/signup', payload)
     setUser(response.data.user)
     return response.data.user
   }
 
   const login = async (payload) => {
-    const response = await api.post('/auth/login', payload)
+    const response = await api.post('/api/auth/login', payload)
     setUser(response.data.user)
     return response.data.user
   }
 
   const logout = async () => {
-    await api.post('/auth/logout')
+    await api.post('/api/auth/logout')
     setUser(null)
   }
 
   const deleteAccount = async () => {
-    await api.delete('/auth/account')
+    await api.delete('/api/auth/account')
     setUser(null)
   }
 
