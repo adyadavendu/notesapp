@@ -20,7 +20,7 @@ const NotesPage = () => {
   const loadNotes = async (query = '') => {
     try {
       setLoading(true)
-      const response = await api.get('/notes', {
+      const response = await api.get('/api/notes', {
         params: query ? { q: query } : {},
       })
       setNotes(response.data)
@@ -46,9 +46,9 @@ const NotesPage = () => {
 
     try {
       if (editingId) {
-        await api.put(`/notes/${editingId}`, form)
+        await api.put(`/api/notes/${editingId}`, form)
       } else {
-        await api.post('/notes', form)
+        await api.post('/api/notes', form)
       }
 
       setForm(initialForm)
@@ -66,7 +66,7 @@ const NotesPage = () => {
 
   const onDelete = async (id) => {
     try {
-      await api.delete(`/notes/${id}`)
+      await api.delete(`/api/notes/${id}`)
       await loadNotes(searchText)
     } catch (apiError) {
       setError(apiError?.response?.data?.message || 'Failed to delete note')
@@ -92,9 +92,7 @@ const NotesPage = () => {
       'This will permanently delete your account and all notes. Continue?',
     )
 
-    if (!confirmed) {
-      return
-    }
+    if (!confirmed) return
 
     const phrase = window.prompt('Type DELETE to permanently remove your account:')
     if (phrase !== 'DELETE') {
@@ -109,7 +107,10 @@ const NotesPage = () => {
     }
   }
 
-  const title = useMemo(() => (editingId ? 'Update your note' : 'Write a note'), [editingId])
+  const title = useMemo(
+    () => (editingId ? 'Update your note' : 'Write a note'),
+    [editingId],
+  )
 
   return (
     <div className="app-shell">
@@ -145,7 +146,11 @@ const NotesPage = () => {
           </form>
 
           {error && <p className="error-text">{error}</p>}
-          {loading ? <div className="card">Loading...</div> : <NoteList notes={notes} onEdit={onEdit} onDelete={onDelete} />}
+          {loading ? (
+            <div className="card">Loading...</div>
+          ) : (
+            <NoteList notes={notes} onEdit={onEdit} onDelete={onDelete} />
+          )}
         </section>
       </main>
     </div>
